@@ -29,6 +29,7 @@ public class AnimatedCircleLoadingView extends FrameLayout {
   private boolean startAnimationIndeterminate;
   private boolean stopAnimationOk;
   private boolean stopAnimationFailure;
+  private boolean stopScaleDownWhenFinished;
   private int mainColor;
   private int secondaryColor;
   private int checkMarkTintColor;
@@ -84,10 +85,10 @@ public class AnimatedCircleLoadingView extends FrameLayout {
         startAnimationIndeterminate = false;
       }
       if (stopAnimationOk) {
-        stopOk();
+        stopOk(stopScaleDownWhenFinished);
       }
       if (stopAnimationFailure) {
-        stopFailure();
+        stopFailure(stopScaleDownWhenFinished);
       }
     }
   }
@@ -131,23 +132,25 @@ public class AnimatedCircleLoadingView extends FrameLayout {
     startAnimation();
   }
 
-  public void stopOk() {
+  public void stopOk(final boolean isScaleDownWhenFinished) {
     if (viewAnimator == null) {
       stopAnimationOk = true;
+      stopScaleDownWhenFinished = isScaleDownWhenFinished;
     } else {
-      viewAnimator.finishOk();
+      viewAnimator.finishOk(isScaleDownWhenFinished);
     }
   }
 
-  public void stopFailure() {
+  public void stopFailure(final boolean isScaleDownWhenFinished) {
     if (viewAnimator == null) {
       stopAnimationFailure = true;
+      stopScaleDownWhenFinished = isScaleDownWhenFinished;
     } else {
-      viewAnimator.finishFailure();
+      viewAnimator.finishFailure(isScaleDownWhenFinished);
     }
   }
 
-  public void resetLoading() {
+  public void resetAnimator() {
     if (viewAnimator != null) {
       viewAnimator.resetAnimator();
     }

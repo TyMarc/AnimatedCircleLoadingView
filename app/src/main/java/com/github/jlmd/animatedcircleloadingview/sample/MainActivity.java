@@ -30,19 +30,10 @@ public class MainActivity extends Activity {
         runOnUiThread(new Runnable() {
           @Override
           public void run() {
-            animatedCircleLoadingView.stopOk();
+            animatedCircleLoadingView.stopOk(false);
           }
         });
       }
     }, 10000);
-  }
-
-  public void resetLoading() {
-    runOnUiThread(new Runnable() {
-      @Override
-      public void run() {
-        animatedCircleLoadingView.resetLoading();
-      }
-    });
   }
 }

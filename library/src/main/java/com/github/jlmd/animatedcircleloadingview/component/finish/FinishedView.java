@@ -69,6 +69,11 @@ public abstract class FinishedView extends ComponentViewAnimation {
     startScaleImageAnimation();
   }
 
+  public void startScaleDownAnimation() {
+    startScaleDownCircleAnimation();
+    startScaleDownImageAnimation();
+  }
+
   private void startScaleCircleAnimation() {
     ValueAnimator valueCircleAnimator =
         ValueAnimator.ofFloat(circleRadius + strokeWidth / 2, circleMaxRadius);
@@ -83,9 +88,57 @@ public abstract class FinishedView extends ComponentViewAnimation {
     valueCircleAnimator.start();
   }
 
+  private void startScaleDownCircleAnimation() {
+    ValueAnimator valueCircleAnimator =
+            ValueAnimator.ofFloat(circleMaxRadius, circleRadius + strokeWidth / 2);
+    valueCircleAnimator.setDuration(350);
+    valueCircleAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+      @Override
+      public void onAnimationUpdate(ValueAnimator animation) {
+        currentCircleRadius = (float) animation.getAnimatedValue();
+        invalidate();
+      }
+    });
+    valueCircleAnimator.start();
+  }
+
   private void startScaleImageAnimation() {
     ValueAnimator valueImageAnimator = ValueAnimator.ofInt(MIN_IMAGE_SIZE, maxImageSize);
     valueImageAnimator.setDuration(1000);
+    valueImageAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+      @Override
+      public void onAnimationUpdate(ValueAnimator animation) {
+        imageSize = (int) animation.getAnimatedValue();
+        invalidate();
+      }
+    });
+    valueImageAnimator.addListener(new Animator.AnimatorListener() {
+      @Override
+      public void onAnimationStart(Animator animation) {
+        // Empty
+      }
+
+      @Override
+      public void onAnimationEnd(Animator animation) {
+        setState(AnimationState.ANIMATION_END);
+      }
+
+      @Override
+      public void onAnimationCancel(Animator animation) {
+        // Empty
+      }
+
+      @Override
+      public void onAnimationRepeat(Animator animation) {
+        // Empty
+      }
+    });
+    valueImageAnimator.start();
+  }
+
+  private void startScaleDownImageAnimation() {
+    ValueAnimator valueImageAnimator = ValueAnimator.ofInt(maxImageSize, MIN_IMAGE_SIZE);
+    valueImageAnimator.setDuration(350);
     valueImageAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
       @Override
       public void onAnimationUpdate(ValueAnimator animation) {

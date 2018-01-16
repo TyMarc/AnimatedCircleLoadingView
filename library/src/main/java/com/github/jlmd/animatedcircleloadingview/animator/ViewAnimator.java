@@ -15,8 +15,8 @@ public class ViewAnimator implements ComponentViewAnimation.StateListener {
   private FinishedOkView finishedOkView;
   private FinishedFailureView finishedFailureView;
   private AnimationState finishedState;
-  private boolean resetAnimator;
   private AnimatedCircleLoadingView.AnimationListener animationListener;
+  private boolean isScaleDownWhenFinished;
 
   public void setComponentViewAnimations(SideArcsView sideArcsView,
       FinishedOkView finishedOkCircleView, FinishedFailureView finishedFailureView) {
@@ -34,30 +34,31 @@ public class ViewAnimator implements ComponentViewAnimation.StateListener {
 
   public void startAnimator() {
     finishedState = null;
+    isScaleDownWhenFinished = false;
     onStartAnimation();
   }
 
   public void stopAnimator() {
     finishedState = null;
+    isScaleDownWhenFinished = false;
     sideArcsView.hideView();
     finishedOkView.hideView();
     finishedFailureView.hideView();
-    resetAnimator = true;
   }
 
   public void resetAnimator() {
     sideArcsView.hideView();
     finishedOkView.hideView();
     finishedFailureView.hideView();
-    resetAnimator = true;
-    startAnimator();
   }
 
-  public void finishOk() {
+  public void finishOk(boolean isScaleDownWhenFinished) {
+    this.isScaleDownWhenFinished = isScaleDownWhenFinished;
     finishedState = AnimationState.FINISHED_OK;
   }
 
-  public void finishFailure() {
+  public void finishFailure(boolean isScaleDownWhenFinished) {
+    this.isScaleDownWhenFinished = isScaleDownWhenFinished;
     finishedState = AnimationState.FINISHED_FAILURE;
   }
 
@@ -67,25 +68,21 @@ public class ViewAnimator implements ComponentViewAnimation.StateListener {
 
   @Override
   public void onStateChanged(AnimationState state) {
-    if (resetAnimator) {
-      resetAnimator = false;
-    } else {
-      switch (state) {
-        case SIDE_ARCS_RESIZED_TOP:
-          onStartAnimation();
-          break;
-        case FINISHED_OK:
-          onFinished(state);
-          break;
-        case FINISHED_FAILURE:
-          onFinished(state);
-          break;
-        case ANIMATION_END:
-          onAnimationEnd();
-          break;
-        default:
-          break;
-      }
+    switch (state) {
+      case SIDE_ARCS_RESIZED_TOP:
+        onStartAnimation();
+        break;
+      case FINISHED_OK:
+        onFinished(state);
+        break;
+      case FINISHED_FAILURE:
+        onFinished(state);
+        break;
+      case ANIMATION_END:
+        onAnimationEnd();
+        break;
+      default:
+        break;
     }
   }
 
@@ -114,7 +111,18 @@ public class ViewAnimator implements ComponentViewAnimation.StateListener {
   }
 
   private void onAnimationEnd() {
-    if (animationListener != null) {
+    if(isScaleDownWhenFinished) {
+      isScaleDownWhenFinished = false;
+      if(finishedState == AnimationState.FINISHED_OK) {
+        sideArcsView.hideView();
+        finishedOkView.showView();
+        finishedOkView.startScaleDownAnimation();
+      } else {
+        sideArcsView.hideView();
+        finishedFailureView.showView();
+        finishedFailureView.startScaleDownAnimation();
+      }
+    } else if (animationListener != null) {
       boolean success = finishedState == AnimationState.FINISHED_OK;
       animationListener.onAnimationEnd(success);
     }
