@@ -66,6 +66,7 @@ public class SideArcsView extends ComponentViewAnimation {
     ValueAnimator valueAnimator = ValueAnimator.ofInt(MIN_START_ANGLE, MAX_START_ANGLE);
     valueAnimator.setInterpolator(new DecelerateInterpolator());
     valueAnimator.setDuration(550);
+    valueAnimator.setStartDelay(300);
     valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
       @Override
       public void onAnimationUpdate(ValueAnimator animation) {
@@ -81,6 +82,7 @@ public class SideArcsView extends ComponentViewAnimation {
     ValueAnimator valueAnimator = ValueAnimator.ofInt(MAX_RESIZE_ANGLE, MIN_RESIZE_ANGLE);
     valueAnimator.setInterpolator(new DecelerateInterpolator());
     valueAnimator.setDuration(620);
+    valueAnimator.setStartDelay(300);
     valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
       @Override
       public void onAnimationUpdate(ValueAnimator animation) {
@@ -91,7 +93,7 @@ public class SideArcsView extends ComponentViewAnimation {
     valueAnimator.addListener(new Animator.AnimatorListener() {
       @Override
       public void onAnimationStart(Animator animation) {
-        // Empty
+        showView();
       }
 
       @Override
