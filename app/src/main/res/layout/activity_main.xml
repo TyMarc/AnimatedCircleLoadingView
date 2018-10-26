@@ -6,11 +6,11 @@
   <com.github.jlmd.animatedcircleloadingview.AnimatedCircleLoadingView
       xmlns:app="http://schemas.android.com/apk/res-auto"
       android:id="@+id/circle_loading_view"
-      android:layout_width="180dp"
-      android:layout_height="180dp"
+      android:layout_width="170dp"
+      android:layout_height="170dp"
       android:layout_centerInParent="true"
       app:animCircleLoadingView_mainColor="@color/main_color"
-      app:animCircleLoadingView_secondaryColor="@color/secondary_color"
+      app:animCircleLoadingView_secondaryColor="@color/main_color"
       app:animCircleLoadingView_textColor="@android:color/white"
   />
 
